@@ -1,0 +1,25 @@
+#countryimg {
+    width: 100%;
+    margin-left: auto;
+    margin-left: auto;
+}
+
+.jumbotron {
+    height: 100vh;
+}
+
+.choose {
+    height: 100px;
+    background-color: lightgray;
+    padding-top: 30px;
+}
+
+.dropdown-menu {
+    max-height: 280px;
+    overflow-y:auto;
+}
+
+.display {
+    height: 100vh;
+    background-color: lightslategray;
+}
