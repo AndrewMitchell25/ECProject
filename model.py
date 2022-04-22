@@ -1,6 +1,8 @@
+import numpy as np
 import requests
 import json
-import csv
+import plotly.express as px
+import pandas as pd
 
 stateNames = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "D.C.", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",  "Michigan", "Minnesota", "Mississippi", "Missouri",  "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",  "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
 
@@ -17,6 +19,7 @@ for i in range(1,57):
 
 startYear = 2003
 endYear = 2021
+years = np.linspace(startYear, endYear, endYear-startYear+1)
 headers = {'Content-type': 'application/json'}
 data = json.dumps({"seriesid": stateIDs,"startyear":str(startYear), "endyear":str(endYear), "annualaverage":"true","registrationkey":"345a69db035449398aa0dfb79dbe47f2"})
 p = requests.post('https://api.bls.gov/publicAPI/v1/timeseries/data/', data=data, headers=headers)
@@ -37,3 +40,15 @@ for i in range(50):
         stateData[stateNames[i]][k] = yA
 print(stateData)
 
+""""
+NOT DONE WITH ANY OF THIS YOU CAN TRY TO FIGURE IT OUT
+df = pd.DataFrame(index=stateNames, columns=years)
+print(df)
+fig = px.choropleth(df[0], geojson=state, locations='Alabama', color='value',
+                           color_continuous_scale="Viridis",
+                           range_color=(0, 12),
+                           scope="usa",
+                           labels={'unemp':'unemployment rate'}
+                          )
+fig.write_html('first_figure.html', auto_open=True)
+"""
