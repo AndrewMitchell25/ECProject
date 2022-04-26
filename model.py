@@ -4,9 +4,10 @@ import json
 import plotly.express as px
 import pandas as pd
 
-stateNames = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "D.C.", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",  "Michigan", "Minnesota", "Mississippi", "Missouri",  "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",  "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
+stateNames = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",  "Michigan", "Minnesota", "Mississippi", "Missouri",  "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",  "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
+stateCodes = [ 'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME','MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX','UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY']
 
-stateData = {}
+stateData = []
 
 stateIDs = []
 state = 0
@@ -28,7 +29,6 @@ json_data = json.loads(p.text)
 for i in range(50):
     #get the current state in the data
     currentState = json_data["Results"]["series"][i]["data"]
-    stateData[stateNames[i]] = list(range(endYear-startYear+1))
     #for each year
     for k in range(endYear-startYear+1):
         #add up each month and divide by 12 to get average
@@ -37,18 +37,23 @@ for i in range(50):
             yearlyAverage += float(currentState[k*12+j]["value"])
         yearlyAverage = yearlyAverage/12
         yA = round(yearlyAverage, 3)
-        stateData[stateNames[i]][k] = yA
+        stateData.append([stateNames[i], k+startYear, yA, stateCodes[i]])
 print(stateData)
 
-""""
-NOT DONE WITH ANY OF THIS YOU CAN TRY TO FIGURE IT OUT
-df = pd.DataFrame(index=stateNames, columns=years)
+df = pd.DataFrame(stateData, columns=["state", "year", "value", "code"])
+
+
 print(df)
-fig = px.choropleth(df[0], geojson=state, locations='Alabama', color='value',
-                           color_continuous_scale="Viridis",
-                           range_color=(0, 12),
-                           scope="usa",
-                           labels={'unemp':'unemployment rate'}
-                          )
+
+#fig = px.scatter(df, x='state', y='value', animation_frame='year', range_y=[0,15], labels="Unemployment Rate")
+
+fig = px.choropleth(df, locationmode="USA-states", 
+                        locations='code',
+                        color='value',
+                        color_continuous_scale="Viridis",
+                        range_color=(0, 12),
+                        scope="usa",
+                        animation_frame='year'
+                        )
+
 fig.write_html('first_figure.html', auto_open=True)
-"""
