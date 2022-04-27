@@ -53,7 +53,9 @@ fig = px.choropleth(df, locationmode="USA-states",
                         color_continuous_scale="Viridis",
                         range_color=(0, 12),
                         scope="usa",
-                        animation_frame='year'
+                        animation_frame='year',
+                        title = 'Unemployment in the US from 2003 to 2021',
+                        labels={'value':'Unemployment Rate (%)', 'year':'Year'}
                         )
 
 fig.write_html('first_figure.html', auto_open=True)
